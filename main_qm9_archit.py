@@ -370,7 +370,7 @@ dataloaders, charge_scale = dataset.retrieve_dataloaders(args)
 data_dummy = next(iter(dataloaders['train']))
 
 print(f"data_dummy is {data_dummy}")      # ------------------------------------------------------------------------------------------------------- #
-write_tensor_dict_to_json(dummy_data, "data.json")
+write_tensor_dict_to_json(data_dummy, "data.json")
 
 # If conditioning is specified, compute property norms and prepare context
 if len(args.conditioning) > 0:
