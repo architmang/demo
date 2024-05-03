@@ -4,7 +4,7 @@ try:
 except ModuleNotFoundError:
     pass
 import copy
-import utils
+from utils import create_folders, save_model, load_model, gradient_clipping, random_rotation
 import argparse
 import wandb
 from configs.datasets_config import get_dataset_info
