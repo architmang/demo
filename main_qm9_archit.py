@@ -20,6 +20,45 @@ import pickle
 from qm9.utils import prepare_context, compute_mean_mad
 from train_test import train_epoch, test, analyze_and_save
 
+def write_tensor_dict_to_json(data, filename):
+
+  # Create a copy of the data to avoid modifying the original
+  data_for_json = data.copy()
+
+  # Convert tensor values to primitive data types (lists, numbers, etc.)
+  for key, value in data_for_json.items():
+    if isinstance(value, torch.Tensor):
+      data_for_json[key] = value.tolist()  # Convert tensor to list
+    elif isinstance(value, (int, float, str, bool)):
+      # These data types are already JSON serializable
+      pass
+    else:
+      raise TypeError(f"Unsupported data type for key '{key}': {type(value)}")
+
+  # Write the dictionary to the JSON file
+  with open(filename, "w") as json_file:
+    json.dump(data_for_json, json_file)
+
+
+def read_tensor_dict_from_json(filename):
+
+  with open(filename, "r") as json_file:
+    data = json.load(json_file)
+
+  # Optionally replace with your tensor library (e.g., torch.tensor)
+  def convert_to_tensor(value):
+    if isinstance(value, list):
+      # Assuming tensors were saved as lists in the JSON file
+      return torch.tensor(value)  # Replace 'torch.tensor' with your library's function
+    else:
+      return value
+
+  # Convert loaded values back to tensors (if necessary)
+  for key, value in data.items():
+    data[key] = convert_to_tensor(value)
+
+  return data
+    
 parser = argparse.ArgumentParser(description='E3Diffusion')
 parser.add_argument('--exp_name', type=str, default='debug_10')
 
@@ -192,17 +231,7 @@ dataloaders, charge_scale = dataset.retrieve_dataloaders(args)
 data_dummy = next(iter(dataloaders['train']))
 
 print(f"data_dummy is {data_dummy}")      # ------------------------------------------------------------------------------------------------------- #
-
-import json
-
-# Define the file name
-file_name = "data_dummy.json"
-
-# Save data_dummy as JSON
-with open(file_name, "w") as json_file:
-    json.dump(data_dummy, json_file)
-
-print(f"Data saved as {file_name}")
+write_tensor_dict_to_json(dummy_data, "data.json")
 
 # If conditioning is specified, compute property norms and prepare context
 if len(args.conditioning) > 0:
