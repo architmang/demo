@@ -22,6 +22,7 @@ import time
 import pickle
 from qm9.utils import prepare_context, compute_mean_mad
 from train_test import train_epoch, test, analyze_and_save
+import json
 
 # Folders
 def create_folders(args):
