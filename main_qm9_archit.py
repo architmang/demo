@@ -316,7 +316,7 @@ atom_encoder = dataset_info['atom_encoder']
 atom_decoder = dataset_info['atom_decoder']
 
 # Get Wandb username and set device for computation
-args.wandb_usr = utils.get_wandb_username(args.wandb_usr)
+args.wandb_usr = get_wandb_username(args.wandb_usr)
 args.cuda = not args.no_cuda and torch.cuda.is_available()
 device = torch.device("cuda" if args.cuda else "cpu")
 dtype = torch.float32
@@ -351,7 +351,7 @@ if args.resume is not None:
     print(args)
 
 # Create necessary folders
-utils.create_folders(args)
+create_folders(args)
 
 # Initialize Wandb for logging experiment metrics
 if args.no_wandb:
@@ -398,7 +398,7 @@ model = model.to(device)
 optim = get_optim(args, model)
 
 # Queue for storing gradient norms
-gradnorm_queue = utils.Queue()
+gradnorm_queue = Queue()
 gradnorm_queue.add(3000)  # Add large value that will be flushed.
 
 
