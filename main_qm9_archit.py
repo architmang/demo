@@ -193,6 +193,17 @@ data_dummy = next(iter(dataloaders['train']))
 
 print(f"data_dummy is {data_dummy}")      # ------------------------------------------------------------------------------------------------------- #
 
+import json
+
+# Define the file name
+file_name = "data_dummy.json"
+
+# Save data_dummy as JSON
+with open(file_name, "w") as json_file:
+    json.dump(data_dummy, json_file)
+
+print(f"Data saved as {file_name}")
+
 # If conditioning is specified, compute property norms and prepare context
 if len(args.conditioning) > 0:
     print(f'Conditioning on {args.conditioning}')
